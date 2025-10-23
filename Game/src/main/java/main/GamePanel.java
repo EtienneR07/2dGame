@@ -1,35 +1,33 @@
 package main;
 
+import entity.Coordinates;
 import entity.Entity;
 import entity.Player;
+import shared.Constants;
 import shared.Direction;
+import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    // 32 x 32 tile
-    private final int orignalTileSize = 32;
-    private final int scale = 2;
-
-    // 48 x 48
-    private final int tileSize = orignalTileSize * scale;
     private final int maxScreenCol = 16;
     private final int maxScreenRow = 14;
 
-    // 576
-    private final int screenWidth = tileSize * maxScreenCol;
-    // 768
-    private final int screenHeight = tileSize * maxScreenRow;
     private final int fps = 60;
 
     private Thread gameThread;
-    private final KeyHandler keyHandler = new KeyHandler();
 
+    private final KeyHandler keyHandler = new KeyHandler();
     private final Player player = new Player();
+    private final Coordinates screenCenter = new Coordinates(
+            Constants.screenWidth / 2 - (Constants.tileSize / 2),
+            Constants.screenHeight / 2 - (Constants.tileSize / 2));
+
+    private final TileManager tileManager = new TileManager();
 
     public GamePanel() {
-        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(Constants.screenWidth, Constants.screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
@@ -70,7 +68,9 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graphics);
 
         var graphics2 = (Graphics2D) graphics;
-        player.draw(graphics2, tileSize);
+
+        tileManager.draw(graphics2, player.getCoordinates(), screenCenter);
+        player.draw(graphics2, screenCenter);
 
         graphics2.dispose();
     }
@@ -92,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
             entity.updateX(Direction.LEFT);
 
         entity.incrementSpriteCounter();
-        if (entity.getSpriteCounter() > 20) {
+        if (entity.getSpriteCounter() > 10) {
             if (entity.getSpriteNum() == 1) {
                 entity.setSpriteNum(2);
             } else {

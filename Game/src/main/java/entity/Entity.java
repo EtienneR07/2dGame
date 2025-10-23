@@ -5,8 +5,8 @@ import shared.Direction;
 import java.awt.image.BufferedImage;
 
 public class Entity {
-    protected int x;
-    protected int y;
+    protected Coordinates coordinates;
+
     protected int speed;
 
     protected int level;
@@ -22,24 +22,16 @@ public class Entity {
 
     public void updateX(Direction direction) {
         this.direction = direction;
-        this.x = x + (direction.getModificator() * speed);
+        this.coordinates.moveX(direction.getModificator() * speed);
     }
 
     public void updateY(Direction direction) {
         this.direction = direction;
-        this.y = y + (direction.getModificator() * speed);
+        this.coordinates.moveY(direction.getModificator() * speed);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getSpeed() {
-        return speed;
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
     public int getSpriteCounter() {

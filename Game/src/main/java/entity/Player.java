@@ -1,5 +1,7 @@
 package entity;
 
+import shared.Constants;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,8 +15,7 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        coordinates = new Coordinates(Constants.tileSize * 23, Constants.tileSize * 21);
         speed = 4;
     }
 
@@ -36,7 +37,7 @@ public class Player extends Entity {
         }
     }
 
-    public void draw(Graphics2D graphics2, int tileSize) {
+    public void draw(Graphics2D graphics2, Coordinates center) {
         BufferedImage image = null;
 
         switch (direction) {
@@ -67,6 +68,6 @@ public class Player extends Entity {
             }
         }
 
-        graphics2.drawImage(image, x, y, tileSize, tileSize, null);
+        graphics2.drawImage(image, center.getX(), center.getY(), Constants.tileSize, Constants.tileSize, null);
     }
 }
