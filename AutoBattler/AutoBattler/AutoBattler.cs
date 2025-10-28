@@ -1,20 +1,22 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AutoBattler.Board;
+using AutoBattler.entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace AutoBattler
 {
-    public class AutobattlerGame : Game
+    public class AutoBattlerGame : Game
     {
         private BasicEffect _effect;
         private Matrix _world;
         private Matrix _view;
         private Matrix _projection;
 
-        // Cube vertices
-        private VertexPositionColor[] _cubeVertices;
+        private Cube _cube;
+        private GameBoard _gameBoard;
         
-        public AutobattlerGame()
+        public AutoBattlerGame()
         {
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -23,7 +25,7 @@ namespace AutoBattler
         protected override void Initialize()
         {
             _world = Matrix.Identity;
-            _view = Matrix.CreateLookAt(new Vector3(3, 3, 5), Vector3.Zero, Vector3.Up);
+            _view = Matrix.CreateLookAt(new Vector3(4, 10, 10), new Vector3(4, 0, 5), Vector3.Up);
             _projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4,
                 GraphicsDevice.Viewport.AspectRatio,
@@ -31,19 +33,9 @@ namespace AutoBattler
                 100f
             );
 
-            _cubeVertices = new VertexPositionColor[]
-            {
-                new VertexPositionColor(new Vector3(-1, 1, 1), Color.Red),
-                new VertexPositionColor(new Vector3(1, 1, 1), Color.Red),
-                new VertexPositionColor(new Vector3(-1, -1, 1), Color.Red),
-                new VertexPositionColor(new Vector3(1, -1, 1), Color.Red),
-
-                new VertexPositionColor(new Vector3(-1, 1, -1), Color.Green),
-                new VertexPositionColor(new Vector3(1, 1, -1), Color.Green),
-                new VertexPositionColor(new Vector3(-1, -1, -1), Color.Green),
-                new VertexPositionColor(new Vector3(1, -1, -1), Color.Green),
-            };
-
+            _cube =  new Cube();
+            _gameBoard = new GameBoard(8, 8, 1f);
+            
             base.Initialize();
         }
 
@@ -77,31 +69,7 @@ namespace AutoBattler
             {
                 pass.Apply();
 
-                GraphicsDevice.DrawUserPrimitives(
-                    PrimitiveType.LineList,
-                    new VertexPositionColor[]
-                    {
-                        // Front face
-                        _cubeVertices[0], _cubeVertices[1],
-                        _cubeVertices[1], _cubeVertices[3],
-                        _cubeVertices[3], _cubeVertices[2],
-                        _cubeVertices[2], _cubeVertices[0],
-
-                        // Back face
-                        _cubeVertices[4], _cubeVertices[5],
-                        _cubeVertices[5], _cubeVertices[7],
-                        _cubeVertices[7], _cubeVertices[6],
-                        _cubeVertices[6], _cubeVertices[4],
-
-                        // Connect front and back
-                        _cubeVertices[0], _cubeVertices[4],
-                        _cubeVertices[1], _cubeVertices[5],
-                        _cubeVertices[2], _cubeVertices[6],
-                        _cubeVertices[3], _cubeVertices[7],
-                    },
-                    0,
-                    12
-                );
+                _gameBoard.Draw(GraphicsDevice, _effect);
             }
 
             base.Draw(gameTime);

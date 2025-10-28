@@ -4,13 +4,13 @@ namespace AutoBattler;
 
 public class GameManager : IDisposable
 {
-    private AutobattlerGame _game;
+    private AutoBattlerGame _game;
     private ScreenManager _screenManager;
     private GraphicsDeviceManager _graphics;
     
     public GameManager()
     {
-        _game = new AutobattlerGame();
+        _game = new AutoBattlerGame();
         _graphics = new GraphicsDeviceManager(_game);
         _screenManager = new ScreenManager(_graphics);
         
